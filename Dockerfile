@@ -1,10 +1,10 @@
 # build environment
 FROM node:8.10.0-alpine AS builder
 WORKDIR /usr/src/ci-web-workshop
-COPY package.json yarn.lock ./
-RUN yarn
+COPY package.json /usr/src/ci-web-workshop
+RUN npm install
 COPY . .
-RUN yarn build
+RUN npm run build
 
 # production environment
 FROM nginx:1.16.1-alpine
