@@ -1,14 +1,13 @@
 # build environment
-FROM node:8.11.4-alpine AS builder
-RUN mkdir /usr/src/ci-web-workshop
+FROM node:8.10.0-alpine AS builder
 WORKDIR /usr/src/ci-web-workshop
-COPY package.json .
-RUN npm install
+COPY package.json yarn.lock ./
+RUN yarn
 COPY . .
-RUN npm run build
+RUN yarn build
 
 # production environment
 FROM nginx:1.16.1-alpine
-COPY --from=0 /usr/src/ci-web-workshop/build /usr/share/nginx/html
+COPY --from=builder /usr/src/ci-web-workshop/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
